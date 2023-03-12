@@ -1,6 +1,8 @@
 import discord
 import openai
 import json
+import os
+import sys
 
 openai.api_key = "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"
 client = discord.Client(intents=discord.Intents.all())
@@ -23,6 +25,9 @@ async def on_message(msg):
     if msg.author == client.user:
         return
     content = str(msg.content)
+
+    if content.lower() == "reboot ai":
+        os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
 
     if content.lower().startswith("ai ") or msg.channel.name == "aichan":
         if content.lower().startswith("ai "):
