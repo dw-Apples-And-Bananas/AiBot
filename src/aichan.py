@@ -6,7 +6,7 @@ openai.api_key = "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"
 client = discord.Client(intents=discord.Intents.all())
 
 messages = []
-messages.append({"role": "system", "content": "You are an assistant."})
+messages.append({"role": "system", "content": "You are an assistant called Ai-Chan."})
 
 with open("./history.json", "r") as f:
     history = json.load(f)
@@ -24,10 +24,10 @@ async def on_message(msg):
         return
     content = str(msg.content)
 
-    if content.lower().startswith("dylan ") or msg.channel.name == "dylanbot":
-        if content.lower().startswith("dylan "):
-            content = content[6::]
-        messages.append({"role": "user", "content": content})
+    if content.lower().startswith("ai ") or msg.channel.name == "aichan":
+        if content.lower().startswith("ai "):
+            content = content[3::]
+        messages.append({"role": "user", "content": f"{msg.author.name}: {content}"})
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=messages)
