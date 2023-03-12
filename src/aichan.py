@@ -27,6 +27,7 @@ async def on_message(msg):
     content = str(msg.content)
 
     if content.lower() == "reboot ai":
+        msg.reply("Rebooting Ai-Chan.")
         os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
 
     if content.lower().startswith("ai ") or msg.channel.name == "aichan":
