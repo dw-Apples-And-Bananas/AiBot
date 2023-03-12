@@ -6,7 +6,7 @@ openai.api_key = "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"
 client = discord.Client(intents=discord.Intents.all())
 
 messages = []
-messages.append({"role": "system", "content": "You are an assistant called Ai-Chan."})
+messages.append({"role": "system", "content": "You are an assistant called Ai-Chan. Include user name."})
 
 with open("./history.json", "r") as f:
     history = json.load(f)
