@@ -3,6 +3,7 @@ import openai
 import json
 import os
 import sys
+import time
 
 openai.api_key = "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"
 client = discord.Client(intents=discord.Intents.all())
@@ -27,28 +28,33 @@ async def on_message(msg):
     content = str(msg.content)
 
     if content.lower() == "reboot ai":
-        msg.reply("Rebooting Ai-Chan.")
+        await msg.reply("Rebooting Ai-Chan.")
+        time.sleep(1)
         os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
 
     if content.lower().startswith("ai ") or msg.channel.name == "aichan":
         if content.lower().startswith("ai "):
             content = content[3::]
-        messages.append({"role": "user", "content": f"{msg.author.name}: {content}"})
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=messages)
-        reply = response["choices"][0]["message"]["content"]
-        messages.append({"role": "assistant", "content": reply})
-        await msg.reply(reply)
-        history[response["created"]] = {"author":str(msg.author.id), "message":content, "response":reply, "usage":response["usage"]}
-        with open("./history.json", "w") as f:
-            json.dump(history, f, indent=2)
         try:
-            data[str(msg.author.id)]["tokens"] += response["usage"]["total_tokens"]
-        except:
-            data[str(msg.author.id)] = {"tokens": response["usage"]["total_tokens"]}
-        with open("./data.json", "w") as f:
-            json.dump(data, f, indent=2)
+            messages.append({"role": "user", "content": f"{msg.author.name}: {content}"})
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages)
+            reply = response["choices"][0]["message"]["content"]
+            messages.append({"role": "assistant", "content": reply})
+            await msg.reply(reply)
+            history[response["created"]] = {"author":str(msg.author.id), "message":content, "response":reply, "usage":response["usage"]}
+            with open("./history.json", "w") as f:
+                json.dump(history, f, indent=2)
+            try:
+                data[str(msg.author.id)]["tokens"] += response["usage"]["total_tokens"]
+            except:
+                data[str(msg.author.id)] = {"tokens": response["usage"]["total_tokens"]}
+            with open("./data.json", "w") as f:
+                json.dump(data, f, indent=2)
+        except Exception as :
+            print(e)
+            await msg.reply(f"Error Occurred.\nYou might wanna reboot me.")
 
     if content.startswith("image "):
         return
