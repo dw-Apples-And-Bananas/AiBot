@@ -52,7 +52,7 @@ async def on_message(msg):
                 data[str(msg.author.id)] = {"tokens": response["usage"]["total_tokens"]}
             with open("./data.json", "w") as f:
                 json.dump(data, f, indent=2)
-        except Exception as :
+        except Exception as e:
             print(e)
             await msg.reply(f"Error Occurred.\nYou might wanna reboot me.")
 
