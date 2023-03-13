@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import time
+from actions.pinterest import PinterestImageScraper
 
 openai.api_key = "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"
 client = discord.Client(intents=discord.Intents.all())
@@ -57,15 +58,9 @@ async def on_message(msg):
             await msg.reply(f"Error Occurred.\nYou might wanna reboot me.")
 
     if content.startswith("image "):
-        return
         content = content[6::]
-        response = openai.Image.create(
-          prompt=content,
-          n=1,
-          size="1024x1024"
-        )
-        image_url = response['data'][0]['url']
-        await msg.reply(image_url)
+        result = PinterestImageScraper().make_ready(content)
+        await msg.reply(str(result))
 
 
 client.run("MTA4MTY1MDE0NTEzNDkyMzkyOA.Gkcc4A.EgDCwhk9xnmSAo0KgZfb9YbVdDhEcdyKruO-GM")
