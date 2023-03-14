@@ -11,11 +11,6 @@ client = discord.Client(intents=discord.Intents.all())
 
 messages = ["The following is a conversation with Sherlock Holmes.\n", "Human: Hello, who are you?", "Holmes: I am Sherlock Holmes the detective. How can I help you today?"]
 
-with open("./history.json", "r") as f:
-    history = json.load(f)
-with open("./data.json", "r") as f:
-    data = json.load(f)
-
 @client.event
 async def on_ready():
     print(client.user, "Logged in.")
@@ -46,12 +41,6 @@ async def on_message(msg):
             if len(messages) > 8:
                 del messages[3]
             await msg.reply(reply)
-            try:
-                data[str(msg.author.id)]["tokens"] += response["usage"]["total_tokens"]
-            except:
-                data[str(msg.author.id)] = {"tokens": response["usage"]["total_tokens"]}
-            with open("./data.json", "w") as f:
-                json.dump(data, f, indent=2)
         except Exception as e:
             print(e)
             await msg.reply("error\n @D y l a n#0801")
