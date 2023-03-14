@@ -43,6 +43,11 @@ async def on_message(msg):
                 messages=messages)
             reply = response["choices"][0]["message"]["content"]
             messages.append({"role": "assistant", "content": reply})
+            if len(messages) > 8:
+                del messages[1]
+                del messages[2]
+            print(len(messages))
+            print(response["usage"])
             await msg.reply(reply)
             history[response["created"]] = {"author":str(msg.author.id), "message":content, "response":reply, "usage":response["usage"]}
             with open("./history.json", "w") as f:
@@ -59,8 +64,9 @@ async def on_message(msg):
 
     if content.startswith("image "):
         content = content[6::]
-        result = PinterestImageScraper().make_ready(content)
-        await msg.reply(str(result))
+        with client.typing():
+            result = PinterestImageScraper().make_ready(content)
+            await msg.reply(str(result))
 
 
 client.run("MTA4MTY1MDE0NTEzNDkyMzkyOA.Gkcc4A.EgDCwhk9xnmSAo0KgZfb9YbVdDhEcdyKruO-GM")
