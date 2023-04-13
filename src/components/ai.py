@@ -1,6 +1,8 @@
 import openai
 
-openai.api_key = "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"
+with open("key") as f:
+    key = f.readlines()
+openai.api_key = key[1].replace("\n","")
 
 messages = [{"role": "system", "content": "You are an assistant called Ai-Chan. Include user name."}]
 def get_messages():

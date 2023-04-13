@@ -9,7 +9,7 @@ import components
 
 client = discord.Client(intents=discord.Intents.all())
 
-devmode = False
+devmode = True
 
 @client.event
 async def on_ready():
@@ -41,6 +41,7 @@ async def on_message(msg):
     #     result = PinterestImageScraper().make_ready(content)
     #     await msg.reply(str(result))
 
-
 if __name__ == "__main__":
-    client.run("MTA4MTY1MDE0NTEzNDkyMzkyOA.Gkcc4A.EgDCwhk9xnmSAo0KgZfb9YbVdDhEcdyKruO-GM")
+    with open("key") as f:
+        key = f.readlines()
+    client.run(key[0])
