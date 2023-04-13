@@ -1,31 +1,15 @@
 import discord
-import openai
 import json
 import os
 import sys
 import time
-from actions.pinterest import PinterestImageScraper
+from definitions import definitions
+import components
 
 
-openai.api_key = "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"
 client = discord.Client(intents=discord.Intents.all())
 
-
-messages = [{"role": "system", "content": "You are an assistant called Ai-Chan. Include user name."}]
-def get_messages():
-    global messages
-    return messages
-def add_message(msg):
-    global messages
-    messages.append(msg)
-def del_message(items:list):
-    global messages
-    m = messages
-    for i in items: del m[i]
-    messages = m
-
-
-
+devmode = False
 
 @client.event
 async def on_ready():
@@ -39,28 +23,23 @@ async def on_message(msg):
         return
     content = str(msg.content)
 
-    if content.lower().startswith("ai ") or msg.channel.name == "aichan":
-        if content.lower().startswith("ai "):
-            content = content[3::]
-        try:
-            add_message({"role": "user", "content": f"{msg.author.name}: {content}"})
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=get_messages(),
-                max_tokens=150)
-            print(response["usage"])
-            reply = response["choices"][0]["message"]["content"]
-            add_message({"role": "assistant", "content": reply})
-            await msg.reply(reply)
-            if len(get_messages()) > 5:
-                del_message([1,2])
-        except Exception as e:
-            await msg.reply(e)
+    func = content.split(" ")[0].lower()
+    arg = " ".join(content.split(" ")[1::]) if len(content.split(" ")) > 0 else ""
 
-    if content.startswith("image "):
-        content = content[6::]
-        result = PinterestImageScraper().make_ready(content)
-        await msg.reply(str(result))
+    if devmode:
+        await definitions[func](msg, arg)
+    else:
+        try:
+            await definitions[func](msg, arg)
+        except:
+            pass
+
+    await definitions["events.remind"](msg, "")
+
+    # if content.startswith("image "):
+    #     content = content[6::]
+    #     result = PinterestImageScraper().make_ready(content)
+    #     await msg.reply(str(result))
 
 
 if __name__ == "__main__":
