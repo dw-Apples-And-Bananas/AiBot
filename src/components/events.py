@@ -37,7 +37,7 @@ class Events(dict):
             await msg.reply("If your having trouble run `events.help join`")
 
     async def remind(self, msg, content):
-        if time.time() - self.last_reminder > 14400 or content == "force":
+        if time.time() - self.last_reminder > 28800 or content == "force":
             self.last_reminder = time.time()
             output = ["**Events Reminder**"]
             for event in self:
