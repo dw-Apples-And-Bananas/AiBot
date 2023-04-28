@@ -4,5 +4,5 @@ import components.shell as shell
 
 definitions = {
         "ai": ai.request,
-        "ls": shell.ls
+        "$": shell.cmdline
 }
