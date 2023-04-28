@@ -34,12 +34,6 @@ async def on_message(msg):
         except:
             pass
 
-    await definitions["events.remind"](msg, "")
-
-    # if content.startswith("image "):
-    #     content = content[6::]
-    #     result = PinterestImageScraper().make_ready(content)
-    #     await msg.reply(str(result))
 
 if __name__ == "__main__":
     with open("key") as f:
