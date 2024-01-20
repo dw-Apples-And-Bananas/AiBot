@@ -1,10 +1,12 @@
-import openai
+from openai import OpenAI, completions
 
 with open("key") as f:
     key = f.readlines()
-openai.api_key = key[1].replace("\n","")
+client = OpenAI(
+  api_key=key[1].replace("\n","")
+)
 
-messages = [{"role": "system", "content": "You are an assistant called Ai-Chan. Include user name."}]
+messages = [{"role": "system", "content": "You are an assistant called Ai-Chan."}]
 def get_messages():
     global messages
     return messages
@@ -20,12 +22,8 @@ def del_message(items:list):
 
 async def request(msg, content):
     add_message({"role": "user", "content": f"{msg.author.name}: {content}"})
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=get_messages(),
-    )
-    print(response["usage"])
-    reply = response["choices"][0]["message"]["content"]
+    completion = client.chat.completions.create(model='gpt-4', messages=get_messages())
+    reply = completion.choices[0].message.content
     add_message({"role": "assistant", "content": reply})
     if len(get_messages()) > 5:
         del_message([1,2])

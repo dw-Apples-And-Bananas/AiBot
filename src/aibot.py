@@ -1,3 +1,9 @@
+import os
+
+os.chdir(os.path.dirname(os.path.dirname(__file__)))
+
+print(os.getcwd())
+
 import discord
 import json
 import os
